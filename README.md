@@ -18,9 +18,9 @@ https://book.getfoundry.sh/
 ### Installation
 
 ```shell
-forge install OpenZeppelin/openzeppelin-contracts
-forge install Uniswap/v2-periphery
-forge install foundry-rs/forge-std
+forge install OpenZeppelin/openzeppelin-contracts --no-git
+forge install Uniswap/v2-periphery --no-git
+forge install foundry-rs/forge-std --no-git
 ```
 
 Copy `.env.example` to `.env` and fill in your RPC URL(s).
@@ -136,7 +136,7 @@ cast send $WETH_ADDRESS "approve(address,uint256)" \
 ```shell
 cast send $WRAPPER_CONTRACT \
   "swapToUsdc(address,uint256,uint256,address)" \
-  $WETH_ADDRESS 9000000000000 0 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC \
+  $WETH_ADDRESS 9000000000000 0 $DEST_WALLET \
   --rpc-url $RPC_URL --account wallet0 --from $WALLET_ADDRESS
 ```
 
