@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.30;
 
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-/*  Representación del contrato Router de Uniswap V2, que permite a este 
+/*  Representación del contrato Router de Uniswap V2, que permite a este
 contrato llamar a sus funciones externas */
 interface IUniswapV2Router02 {
     // Devuelve la dirección del token WETH (Wrapped Ether), esencial para manejar swaps que involucran a ETH
@@ -12,20 +12,18 @@ interface IUniswapV2Router02 {
 
     /* Ejecuta un swap donde conoces la cantidad exacta de token de entrada (amountIn) y especificas la cantidad mínima a recibir (amountOutMin)*/
     function swapExactTokensForTokens(
-        uint amountIn,
-        uint amountOutMin,
+        uint256 amountIn,
+        uint256 amountOutMin,
         address[] calldata path,
         address to,
-        uint deadline
-    ) external returns (uint[] memory amounts);
+        uint256 deadline
+    ) external returns (uint256[] memory amounts);
 
     /* Ejecuta un swap donde la entrada es Ether nativo (usando payable) y se especifica la cantidad mínima a recibir (amountOutMin) */
-    function swapExactETHForTokens(
-        uint amountOutMin,
-        address[] calldata path,
-        address to,
-        uint deadline
-    ) external payable returns (uint[] memory amounts);
+    function swapExactETHForTokens(uint256 amountOutMin, address[] calldata path, address to, uint256 deadline)
+        external
+        payable
+        returns (uint256[] memory amounts);
 }
 
 contract SwapModuleV2 {
@@ -36,7 +34,7 @@ contract SwapModuleV2 {
     IUniswapV2Router02 public immutable ROUTER;
 
     // evento que se emitirá después de cada swap exitoso
-    event SwapExecuted(address indexed user, address tokenIn, address tokenOut, uint amountIn, uint amountOut);
+    event SwapExecuted(address indexed user, address tokenIn, address tokenOut, uint256 amountIn, uint256 amountOut);
 
     constructor(address _router) {
         require(_router != address(0), "router-zero");
@@ -67,7 +65,7 @@ contract SwapModuleV2 {
         /*Nota: El usuario debe haber aprobado previamente este contrato para gastar
          sus tokens usando approve(address(SwapModuleV2), amountIn)*/
 
-        /* The SwapModuleV2 contract authorizes the Uniswap Router 
+        /* The SwapModuleV2 contract authorizes the Uniswap Router
         to take tokens from its balance and execute the swap*/
         IERC20(tokenIn).safeIncreaseAllowance(address(ROUTER), amountIn);
 
@@ -76,8 +74,8 @@ contract SwapModuleV2 {
         path[0] = tokenIn;
         path[1] = tokenOut;
 
-            // Execute swap
-        uint[] memory amounts = ROUTER.swapExactTokensForTokens(amountIn, amountOutMin, path, msg.sender, deadline);
+        // Execute swap
+        uint256[] memory amounts = ROUTER.swapExactTokensForTokens(amountIn, amountOutMin, path, msg.sender, deadline);
 
         emit SwapExecuted(msg.sender, tokenIn, tokenOut, amountIn, amounts[amounts.length - 1]);
     }
@@ -88,11 +86,7 @@ contract SwapModuleV2 {
      * @param amountOutMin minimum acceptable amountOut
      * @param deadline tx deadline
      */
-    function swapExactEthForTokensSingle(
-        address tokenOut,
-        uint256 amountOutMin,
-        uint256 deadline
-    ) external payable {
+    function swapExactEthForTokensSingle(address tokenOut, uint256 amountOutMin, uint256 deadline) external payable {
         require(tokenOut != address(0), "zero-token");
         require(msg.value > 0, "zero-eth");
 
@@ -102,10 +96,11 @@ contract SwapModuleV2 {
         path[0] = weth;
         path[1] = tokenOut;
 
-        /* The ETH is sent to the Router, converted to WETH, exchanged for tokenOut, 
+        /* The ETH is sent to the Router, converted to WETH, exchanged for tokenOut,
         and the final token is sent directly back to the user (msg.sender)*/
 
-        uint[] memory amounts = ROUTER.swapExactETHForTokens{value: msg.value}(amountOutMin, path, msg.sender, deadline);
+        uint256[] memory amounts =
+            ROUTER.swapExactETHForTokens{value: msg.value}(amountOutMin, path, msg.sender, deadline);
 
         emit SwapExecuted(msg.sender, weth, tokenOut, msg.value, amounts[amounts.length - 1]);
     }

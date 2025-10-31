@@ -1,18 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.30;
 
-import { BaseForkedTest } from "./BaseForkedTest.t.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { console } from "forge-std/console.sol";
+import {BaseForkedTest} from "./BaseForkedTest.t.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {console} from "forge-std/console.sol";
 
 contract SwapModuleV2Test is BaseForkedTest {
-    
     // NUEVA PRUEBA: WETH -> USDC
     function test_swap_weth_to_usdc() public {
         // parámetros del swap
         // Ajustamos amountIn a la constante WETH_INITIAL_AMOUNT (0.1 WETH)
         uint256 amountIn = WETH_INITIAL_AMOUNT;
-        uint256 minOut = 1; 
+        uint256 minOut = 1;
         uint256 deadline = block.timestamp + 600;
 
         // Simular acciones desde BARBA

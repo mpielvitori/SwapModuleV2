@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {IUniswapV2Router02} from "v2-periphery/interfaces/IUniswapV2Router02.sol";
- 
+
 contract Wrapper {
     using SafeERC20 for IERC20;
 
@@ -54,7 +54,8 @@ contract Wrapper {
             path[2] = USDC;
         }
 
-        uint256[] memory amounts = ROUTER.swapExactTokensForTokens(amountIn, amountOutMin, path, recipient, block.timestamp);
+        uint256[] memory amounts =
+            ROUTER.swapExactTokensForTokens(amountIn, amountOutMin, path, recipient, block.timestamp);
 
         amountOut = amounts[amounts.length - 1];
     }

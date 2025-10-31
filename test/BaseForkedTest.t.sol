@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.30;
 
-import { Test, console } from "forge-std/Test.sol";
-import { SwapModuleV2 } from "src/SwapModuleV2.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {Test, console} from "forge-std/Test.sol";
+import {SwapModuleV2} from "src/SwapModuleV2.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 abstract contract BaseForkedTest is Test {
     SwapModuleV2 public sSwap;
@@ -36,9 +36,9 @@ abstract contract BaseForkedTest is Test {
 
         // Fond BARBA con WETH
         deal(WETH_ADDRESS, BARBA, WETH_INITIAL_AMOUNT);
-        
+
         // OPCIONAL: También fundamos con ETH nativo, ya que es más natural para el usuario
-        vm.deal(BARBA, WETH_INITIAL_AMOUNT); 
+        vm.deal(BARBA, WETH_INITIAL_AMOUNT);
 
         console.log("Fork created with RPC:", rpc);
         console.log("SwapModuleV2 deployed:", address(sSwap));
