@@ -16,7 +16,7 @@ contract WrapperTest is Test {
 
     function setUp() public {
         vm.createSelectFork(vm.envString("ZETACHAIN_RPC_URL"));
-        wrapper = new Wrapper(ROUTER,USDC);
+        wrapper = new Wrapper(ROUTER, USDC);
     }
 
     function testSwapUSDCtoUSDC() public {
@@ -53,13 +53,12 @@ contract WrapperTest is Test {
         uint256 before = IERC20(USDC).balanceOf(USER);
 
         console.log("Balance before swap:", before);
-        
+
         vm.expectRevert();
 
         //IERC20(USDC).approve(address(wrapper), type(uint256).max);
         wrapper.swapToUsdc(USDC, amountIn, 0, USER);
 
-        
         uint256 afterBal = IERC20(USDC).balanceOf(USER);
 
         console.log("Balance after swap:", afterBal);
@@ -67,5 +66,4 @@ contract WrapperTest is Test {
         //assertGt(afterBal, before, "swap failed");
         vm.stopPrank();
     }
-
 }
