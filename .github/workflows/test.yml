@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ETH_RPC_URL: ${{ secrets.ETH_RPC_URL }}
+      ZETACHAIN_RPC_URL: ${{ vars.ZETACHAIN_RPC_URL }}
     steps:
       - uses: actions/checkout@v5
         with:
